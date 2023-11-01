@@ -19,13 +19,13 @@ import { GqlDefaultAuthGuard } from "../../auth/gqlDefaultAuth.guard";
 import * as common from "@nestjs/common";
 import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterResponse.interceptor";
 import { AclValidateRequestInterceptor } from "../../interceptors/aclValidateRequest.interceptor";
-import { CreateAddressArgs } from "./CreateAddressArgs";
-import { UpdateAddressArgs } from "./UpdateAddressArgs";
-import { DeleteAddressArgs } from "./DeleteAddressArgs";
+import { Address } from "./Address";
 import { AddressCountArgs } from "./AddressCountArgs";
 import { AddressFindManyArgs } from "./AddressFindManyArgs";
 import { AddressFindUniqueArgs } from "./AddressFindUniqueArgs";
-import { Address } from "./Address";
+import { CreateAddressArgs } from "./CreateAddressArgs";
+import { UpdateAddressArgs } from "./UpdateAddressArgs";
+import { DeleteAddressArgs } from "./DeleteAddressArgs";
 import { CustomerFindManyArgs } from "../../customer/base/CustomerFindManyArgs";
 import { Customer } from "../../customer/base/Customer";
 import { AddressService } from "../address.service";
@@ -43,7 +43,7 @@ export class AddressResolverBase {
     action: "read",
     possession: "any",
   })
-  async _addressesMeta(
+  async _AddressesMeta(
     @graphql.Args() args: AddressCountArgs
   ): Promise<MetaQueryPayload> {
     const result = await this.service.count(args);
@@ -59,7 +59,7 @@ export class AddressResolverBase {
     action: "read",
     possession: "any",
   })
-  async addresses(
+  async Addresses(
     @graphql.Args() args: AddressFindManyArgs
   ): Promise<Address[]> {
     return this.service.findMany(args);
@@ -72,7 +72,7 @@ export class AddressResolverBase {
     action: "read",
     possession: "own",
   })
-  async address(
+  async Address(
     @graphql.Args() args: AddressFindUniqueArgs
   ): Promise<Address | null> {
     const result = await this.service.findOne(args);
