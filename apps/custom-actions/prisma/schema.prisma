@@ -19,16 +19,16 @@ model User {
 }
 
 model Order {
-  id         String    @id @default(cuid())
   createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  quantity   Int?
-  discount   Float?
-  totalPrice Int?
   customer   Customer? @relation(fields: [customerId], references: [id])
   customerId String?
+  discount   Float?
+  id         String    @id @default(cuid())
   product    Product?  @relation(fields: [productId], references: [id])
   productId  String?
+  quantity   Int?
+  totalPrice Int?
+  updatedAt  DateTime  @updatedAt
 }
 
 model Customer {

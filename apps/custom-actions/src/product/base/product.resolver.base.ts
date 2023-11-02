@@ -19,13 +19,13 @@ import { GqlDefaultAuthGuard } from "../../auth/gqlDefaultAuth.guard";
 import * as common from "@nestjs/common";
 import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterResponse.interceptor";
 import { AclValidateRequestInterceptor } from "../../interceptors/aclValidateRequest.interceptor";
-import { CreateProductArgs } from "./CreateProductArgs";
-import { UpdateProductArgs } from "./UpdateProductArgs";
-import { DeleteProductArgs } from "./DeleteProductArgs";
+import { Product } from "./Product";
 import { ProductCountArgs } from "./ProductCountArgs";
 import { ProductFindManyArgs } from "./ProductFindManyArgs";
 import { ProductFindUniqueArgs } from "./ProductFindUniqueArgs";
-import { Product } from "./Product";
+import { CreateProductArgs } from "./CreateProductArgs";
+import { UpdateProductArgs } from "./UpdateProductArgs";
+import { DeleteProductArgs } from "./DeleteProductArgs";
 import { OrderFindManyArgs } from "../../order/base/OrderFindManyArgs";
 import { Order } from "../../order/base/Order";
 import { ProductService } from "../product.service";
@@ -43,7 +43,7 @@ export class ProductResolverBase {
     action: "read",
     possession: "any",
   })
-  async _productsMeta(
+  async _ProductsMeta(
     @graphql.Args() args: ProductCountArgs
   ): Promise<MetaQueryPayload> {
     const result = await this.service.count(args);
@@ -59,7 +59,7 @@ export class ProductResolverBase {
     action: "read",
     possession: "any",
   })
-  async products(
+  async Products(
     @graphql.Args() args: ProductFindManyArgs
   ): Promise<Product[]> {
     return this.service.findMany(args);
@@ -72,7 +72,7 @@ export class ProductResolverBase {
     action: "read",
     possession: "own",
   })
-  async product(
+  async Product(
     @graphql.Args() args: ProductFindUniqueArgs
   ): Promise<Product | null> {
     const result = await this.service.findOne(args);

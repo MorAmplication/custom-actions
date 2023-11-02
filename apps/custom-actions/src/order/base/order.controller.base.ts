@@ -63,12 +63,7 @@ export class OrderControllerBase {
           : undefined,
       },
       select: {
-        id: true,
         createdAt: true,
-        updatedAt: true,
-        quantity: true,
-        discount: true,
-        totalPrice: true,
 
         customer: {
           select: {
@@ -76,11 +71,18 @@ export class OrderControllerBase {
           },
         },
 
+        discount: true,
+        id: true,
+
         product: {
           select: {
             id: true,
           },
         },
+
+        quantity: true,
+        totalPrice: true,
+        updatedAt: true,
       },
     });
   }
@@ -102,12 +104,7 @@ export class OrderControllerBase {
     return this.service.findMany({
       ...args,
       select: {
-        id: true,
         createdAt: true,
-        updatedAt: true,
-        quantity: true,
-        discount: true,
-        totalPrice: true,
 
         customer: {
           select: {
@@ -115,59 +112,20 @@ export class OrderControllerBase {
           },
         },
 
-        product: {
-          select: {
-            id: true,
-          },
-        },
-      },
-    });
-  }
-
-  @common.UseInterceptors(AclFilterResponseInterceptor)
-  @common.Get("/:id")
-  @swagger.ApiOkResponse({ type: Order })
-  @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
-  @nestAccessControl.UseRoles({
-    resource: "Order",
-    action: "read",
-    possession: "own",
-  })
-  @swagger.ApiForbiddenResponse({
-    type: errors.ForbiddenException,
-  })
-  async Order(
-    @common.Param() params: OrderWhereUniqueInput
-  ): Promise<Order | null> {
-    const result = await this.service.findOne({
-      where: params,
-      select: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
-        quantity: true,
         discount: true,
-        totalPrice: true,
-
-        customer: {
-          select: {
-            id: true,
-          },
-        },
+        id: true,
 
         product: {
           select: {
             id: true,
           },
         },
+
+        quantity: true,
+        totalPrice: true,
+        updatedAt: true,
       },
     });
-    if (result === null) {
-      throw new errors.NotFoundException(
-        `No resource was found for ${JSON.stringify(params)}`
-      );
-    }
-    return result;
   }
 
   @common.UseInterceptors(AclValidateRequestInterceptor)
@@ -205,12 +163,7 @@ export class OrderControllerBase {
             : undefined,
         },
         select: {
-          id: true,
           createdAt: true,
-          updatedAt: true,
-          quantity: true,
-          discount: true,
-          totalPrice: true,
 
           customer: {
             select: {
@@ -218,11 +171,18 @@ export class OrderControllerBase {
             },
           },
 
+          discount: true,
+          id: true,
+
           product: {
             select: {
               id: true,
             },
           },
+
+          quantity: true,
+          totalPrice: true,
+          updatedAt: true,
         },
       });
     } catch (error) {
@@ -253,12 +213,7 @@ export class OrderControllerBase {
       return await this.service.delete({
         where: params,
         select: {
-          id: true,
           createdAt: true,
-          updatedAt: true,
-          quantity: true,
-          discount: true,
-          totalPrice: true,
 
           customer: {
             select: {
@@ -266,11 +221,18 @@ export class OrderControllerBase {
             },
           },
 
+          discount: true,
+          id: true,
+
           product: {
             select: {
               id: true,
             },
           },
+
+          quantity: true,
+          totalPrice: true,
+          updatedAt: true,
         },
       });
     } catch (error) {
