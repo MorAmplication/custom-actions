@@ -19,13 +19,12 @@ import { GqlDefaultAuthGuard } from "../../auth/gqlDefaultAuth.guard";
 import * as common from "@nestjs/common";
 import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterResponse.interceptor";
 import { AclValidateRequestInterceptor } from "../../interceptors/aclValidateRequest.interceptor";
+import { Order } from "./Order";
+import { OrderCountArgs } from "./OrderCountArgs";
+import { OrderFindManyArgs } from "./OrderFindManyArgs";
 import { CreateOrderArgs } from "./CreateOrderArgs";
 import { UpdateOrderArgs } from "./UpdateOrderArgs";
 import { DeleteOrderArgs } from "./DeleteOrderArgs";
-import { OrderCountArgs } from "./OrderCountArgs";
-import { OrderFindManyArgs } from "./OrderFindManyArgs";
-import { OrderFindUniqueArgs } from "./OrderFindUniqueArgs";
-import { Order } from "./Order";
 import { Customer } from "../../customer/base/Customer";
 import { Product } from "../../product/base/Product";
 import { OrderService } from "../order.service";
@@ -43,7 +42,7 @@ export class OrderResolverBase {
     action: "read",
     possession: "any",
   })
-  async _ordersMeta(
+  async _OrdersMeta(
     @graphql.Args() args: OrderCountArgs
   ): Promise<MetaQueryPayload> {
     const result = await this.service.count(args);
@@ -59,25 +58,8 @@ export class OrderResolverBase {
     action: "read",
     possession: "any",
   })
-  async orders(@graphql.Args() args: OrderFindManyArgs): Promise<Order[]> {
+  async Orders(@graphql.Args() args: OrderFindManyArgs): Promise<Order[]> {
     return this.service.findMany(args);
-  }
-
-  @common.UseInterceptors(AclFilterResponseInterceptor)
-  @graphql.Query(() => Order, { nullable: true })
-  @nestAccessControl.UseRoles({
-    resource: "Order",
-    action: "read",
-    possession: "own",
-  })
-  async order(
-    @graphql.Args() args: OrderFindUniqueArgs
-  ): Promise<Order | null> {
-    const result = await this.service.findOne(args);
-    if (result === null) {
-      return null;
-    }
-    return result;
   }
 
   @common.UseInterceptors(AclValidateRequestInterceptor)
