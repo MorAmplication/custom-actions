@@ -26,6 +26,11 @@ export class OrderServiceBase {
   ): Promise<Order[]> {
     return this.prisma.order.findMany(args);
   }
+  async Order<T extends Prisma.OrderFindUniqueArgs>(
+    args: Prisma.SelectSubset<T, Prisma.OrderFindUniqueArgs>
+  ): Promise<Order | null> {
+    return this.prisma.order.findUnique(args);
+  }
   async createOrder<T extends Prisma.OrderCreateArgs>(
     args: Prisma.SelectSubset<T, Prisma.OrderCreateArgs>
   ): Promise<Order> {
