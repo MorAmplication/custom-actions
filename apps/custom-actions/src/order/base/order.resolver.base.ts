@@ -21,7 +21,6 @@ import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterRespon
 import { Order } from "./Order";
 import { OrderCountArgs } from "./OrderCountArgs";
 import { OrderFindManyArgs } from "./OrderFindManyArgs";
-import { OrderFindUniqueArgs } from "./OrderFindUniqueArgs";
 import { DeleteOrderArgs } from "./DeleteOrderArgs";
 import { OrderService } from "../order.service";
 @common.UseGuards(GqlDefaultAuthGuard, gqlACGuard.GqlACGuard)
@@ -56,23 +55,6 @@ export class OrderResolverBase {
   })
   async Orders(@graphql.Args() args: OrderFindManyArgs): Promise<Order[]> {
     return this.service.findMany(args);
-  }
-
-  @common.UseInterceptors(AclFilterResponseInterceptor)
-  @graphql.Query(() => Order, { nullable: true })
-  @nestAccessControl.UseRoles({
-    resource: "Order",
-    action: "read",
-    possession: "own",
-  })
-  async Order(
-    @graphql.Args() args: OrderFindUniqueArgs
-  ): Promise<Order | null> {
-    const result = await this.service.findOne(args);
-    if (result === null) {
-      return null;
-    }
-    return result;
   }
 
   @graphql.Mutation(() => Order)
