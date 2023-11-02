@@ -47,40 +47,11 @@ export class OrderControllerBase {
   })
   async createOrder(@common.Body() data: OrderCreateInput): Promise<Order> {
     return await this.service.create({
-      data: {
-        ...data,
-
-        customer: data.customer
-          ? {
-              connect: data.customer,
-            }
-          : undefined,
-
-        product: data.product
-          ? {
-              connect: data.product,
-            }
-          : undefined,
-      },
+      data: data,
       select: {
-        id: true,
         createdAt: true,
+        id: true,
         updatedAt: true,
-        quantity: true,
-        discount: true,
-        totalPrice: true,
-
-        customer: {
-          select: {
-            id: true,
-          },
-        },
-
-        product: {
-          select: {
-            id: true,
-          },
-        },
       },
     });
   }
@@ -102,24 +73,9 @@ export class OrderControllerBase {
     return this.service.findMany({
       ...args,
       select: {
-        id: true,
         createdAt: true,
+        id: true,
         updatedAt: true,
-        quantity: true,
-        discount: true,
-        totalPrice: true,
-
-        customer: {
-          select: {
-            id: true,
-          },
-        },
-
-        product: {
-          select: {
-            id: true,
-          },
-        },
       },
     });
   }
@@ -142,24 +98,9 @@ export class OrderControllerBase {
     const result = await this.service.findOne({
       where: params,
       select: {
-        id: true,
         createdAt: true,
+        id: true,
         updatedAt: true,
-        quantity: true,
-        discount: true,
-        totalPrice: true,
-
-        customer: {
-          select: {
-            id: true,
-          },
-        },
-
-        product: {
-          select: {
-            id: true,
-          },
-        },
       },
     });
     if (result === null) {
@@ -189,40 +130,11 @@ export class OrderControllerBase {
     try {
       return await this.service.update({
         where: params,
-        data: {
-          ...data,
-
-          customer: data.customer
-            ? {
-                connect: data.customer,
-              }
-            : undefined,
-
-          product: data.product
-            ? {
-                connect: data.product,
-              }
-            : undefined,
-        },
+        data: data,
         select: {
-          id: true,
           createdAt: true,
+          id: true,
           updatedAt: true,
-          quantity: true,
-          discount: true,
-          totalPrice: true,
-
-          customer: {
-            select: {
-              id: true,
-            },
-          },
-
-          product: {
-            select: {
-              id: true,
-            },
-          },
         },
       });
     } catch (error) {
@@ -253,24 +165,9 @@ export class OrderControllerBase {
       return await this.service.delete({
         where: params,
         select: {
-          id: true,
           createdAt: true,
+          id: true,
           updatedAt: true,
-          quantity: true,
-          discount: true,
-          totalPrice: true,
-
-          customer: {
-            select: {
-              id: true,
-            },
-          },
-
-          product: {
-            select: {
-              id: true,
-            },
-          },
         },
       });
     } catch (error) {
