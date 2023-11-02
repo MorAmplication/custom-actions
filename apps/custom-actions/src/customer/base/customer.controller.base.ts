@@ -267,12 +267,7 @@ export class CustomerControllerBase {
     const results = await this.service.findOrders(params.id, {
       ...query,
       select: {
-        id: true,
         createdAt: true,
-        updatedAt: true,
-        quantity: true,
-        discount: true,
-        totalPrice: true,
 
         customer: {
           select: {
@@ -280,11 +275,18 @@ export class CustomerControllerBase {
           },
         },
 
+        discount: true,
+        id: true,
+
         product: {
           select: {
             id: true,
           },
         },
+
+        quantity: true,
+        totalPrice: true,
+        updatedAt: true,
       },
     });
     if (results === null) {
