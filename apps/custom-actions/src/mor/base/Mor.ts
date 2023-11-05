@@ -13,11 +13,10 @@ import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsDate, ValidateNested, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
-import { User } from "../../user/base/User";
-import { Mor } from "../../mor/base/Mor";
+import { Order } from "../../order/base/Order";
 
 @ObjectType()
-class Order {
+class Mor {
   @ApiProperty({
     required: true,
     type: String,
@@ -44,21 +43,12 @@ class Order {
 
   @ApiProperty({
     required: false,
-    type: () => User,
+    type: () => Order,
   })
   @ValidateNested()
-  @Type(() => User)
+  @Type(() => Order)
   @IsOptional()
-  user?: User | null;
-
-  @ApiProperty({
-    required: false,
-    type: () => [Mor],
-  })
-  @ValidateNested()
-  @Type(() => Mor)
-  @IsOptional()
-  mors?: Array<Mor>;
+  order?: Order | null;
 }
 
-export { Order as Order };
+export { Mor as Mor };

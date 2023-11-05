@@ -11,36 +11,46 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
+import { MorWhereInput } from "./MorWhereInput";
 import { ValidateNested, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
-import { MorCreateNestedManyWithoutOrdersInput } from "./MorCreateNestedManyWithoutOrdersInput";
 
 @InputType()
-class OrderCreateInput {
+class MorListRelationFilter {
   @ApiProperty({
     required: false,
-    type: () => UserWhereUniqueInput,
+    type: () => MorWhereInput,
   })
   @ValidateNested()
-  @Type(() => UserWhereUniqueInput)
+  @Type(() => MorWhereInput)
   @IsOptional()
-  @Field(() => UserWhereUniqueInput, {
+  @Field(() => MorWhereInput, {
     nullable: true,
   })
-  user?: UserWhereUniqueInput | null;
+  every?: MorWhereInput;
 
   @ApiProperty({
     required: false,
-    type: () => MorCreateNestedManyWithoutOrdersInput,
+    type: () => MorWhereInput,
   })
   @ValidateNested()
-  @Type(() => MorCreateNestedManyWithoutOrdersInput)
+  @Type(() => MorWhereInput)
   @IsOptional()
-  @Field(() => MorCreateNestedManyWithoutOrdersInput, {
+  @Field(() => MorWhereInput, {
     nullable: true,
   })
-  mors?: MorCreateNestedManyWithoutOrdersInput;
+  some?: MorWhereInput;
+
+  @ApiProperty({
+    required: false,
+    type: () => MorWhereInput,
+  })
+  @ValidateNested()
+  @Type(() => MorWhereInput)
+  @IsOptional()
+  @Field(() => MorWhereInput, {
+    nullable: true,
+  })
+  none?: MorWhereInput;
 }
-
-export { OrderCreateInput as OrderCreateInput };
+export { MorListRelationFilter as MorListRelationFilter };

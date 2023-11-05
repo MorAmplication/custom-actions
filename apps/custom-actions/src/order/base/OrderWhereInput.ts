@@ -15,6 +15,7 @@ import { StringFilter } from "../../util/StringFilter";
 import { Type } from "class-transformer";
 import { IsOptional, ValidateNested } from "class-validator";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
+import { MorListRelationFilter } from "../../mor/base/MorListRelationFilter";
 
 @InputType()
 class OrderWhereInput {
@@ -40,6 +41,18 @@ class OrderWhereInput {
     nullable: true,
   })
   user?: UserWhereUniqueInput;
+
+  @ApiProperty({
+    required: false,
+    type: () => MorListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => MorListRelationFilter)
+  @IsOptional()
+  @Field(() => MorListRelationFilter, {
+    nullable: true,
+  })
+  mors?: MorListRelationFilter;
 }
 
 export { OrderWhereInput as OrderWhereInput };
