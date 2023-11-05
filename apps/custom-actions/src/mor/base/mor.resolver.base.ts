@@ -19,33 +19,31 @@ import { GqlDefaultAuthGuard } from "../../auth/gqlDefaultAuth.guard";
 import * as common from "@nestjs/common";
 import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterResponse.interceptor";
 import { AclValidateRequestInterceptor } from "../../interceptors/aclValidateRequest.interceptor";
-import { Order } from "./Order";
-import { OrderCountArgs } from "./OrderCountArgs";
-import { OrderFindManyArgs } from "./OrderFindManyArgs";
-import { OrderFindUniqueArgs } from "./OrderFindUniqueArgs";
-import { CreateOrderArgs } from "./CreateOrderArgs";
-import { UpdateOrderArgs } from "./UpdateOrderArgs";
-import { DeleteOrderArgs } from "./DeleteOrderArgs";
-import { MorFindManyArgs } from "../../mor/base/MorFindManyArgs";
-import { Mor } from "../../mor/base/Mor";
-import { User } from "../../user/base/User";
-import { OrderService } from "../order.service";
+import { Mor } from "./Mor";
+import { MorCountArgs } from "./MorCountArgs";
+import { MorFindManyArgs } from "./MorFindManyArgs";
+import { MorFindUniqueArgs } from "./MorFindUniqueArgs";
+import { CreateMorArgs } from "./CreateMorArgs";
+import { UpdateMorArgs } from "./UpdateMorArgs";
+import { DeleteMorArgs } from "./DeleteMorArgs";
+import { Order } from "../../order/base/Order";
+import { MorService } from "../mor.service";
 @common.UseGuards(GqlDefaultAuthGuard, gqlACGuard.GqlACGuard)
-@graphql.Resolver(() => Order)
-export class OrderResolverBase {
+@graphql.Resolver(() => Mor)
+export class MorResolverBase {
   constructor(
-    protected readonly service: OrderService,
+    protected readonly service: MorService,
     protected readonly rolesBuilder: nestAccessControl.RolesBuilder
   ) {}
 
   @graphql.Query(() => MetaQueryPayload)
   @nestAccessControl.UseRoles({
-    resource: "Order",
+    resource: "Mor",
     action: "read",
     possession: "any",
   })
-  async _OrdersMeta(
-    @graphql.Args() args: OrderCountArgs
+  async _MorsMeta(
+    @graphql.Args() args: MorCountArgs
   ): Promise<MetaQueryPayload> {
     const result = await this.service.count(args);
     return {
@@ -54,26 +52,24 @@ export class OrderResolverBase {
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
-  @graphql.Query(() => [Order])
+  @graphql.Query(() => [Mor])
   @nestAccessControl.UseRoles({
-    resource: "Order",
+    resource: "Mor",
     action: "read",
     possession: "any",
   })
-  async Orders(@graphql.Args() args: OrderFindManyArgs): Promise<Order[]> {
+  async Mors(@graphql.Args() args: MorFindManyArgs): Promise<Mor[]> {
     return this.service.findMany(args);
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
-  @graphql.Query(() => Order, { nullable: true })
+  @graphql.Query(() => Mor, { nullable: true })
   @nestAccessControl.UseRoles({
-    resource: "Order",
+    resource: "Mor",
     action: "read",
     possession: "own",
   })
-  async Order(
-    @graphql.Args() args: OrderFindUniqueArgs
-  ): Promise<Order | null> {
+  async Mor(@graphql.Args() args: MorFindUniqueArgs): Promise<Mor | null> {
     const result = await this.service.findOne(args);
     if (result === null) {
       return null;
@@ -82,21 +78,21 @@ export class OrderResolverBase {
   }
 
   @common.UseInterceptors(AclValidateRequestInterceptor)
-  @graphql.Mutation(() => Order)
+  @graphql.Mutation(() => Mor)
   @nestAccessControl.UseRoles({
-    resource: "Order",
+    resource: "Mor",
     action: "create",
     possession: "any",
   })
-  async createOrder(@graphql.Args() args: CreateOrderArgs): Promise<Order> {
+  async createMor(@graphql.Args() args: CreateMorArgs): Promise<Mor> {
     return await this.service.create({
       ...args,
       data: {
         ...args.data,
 
-        user: args.data.user
+        order: args.data.order
           ? {
-              connect: args.data.user,
+              connect: args.data.order,
             }
           : undefined,
       },
@@ -104,24 +100,22 @@ export class OrderResolverBase {
   }
 
   @common.UseInterceptors(AclValidateRequestInterceptor)
-  @graphql.Mutation(() => Order)
+  @graphql.Mutation(() => Mor)
   @nestAccessControl.UseRoles({
-    resource: "Order",
+    resource: "Mor",
     action: "update",
     possession: "any",
   })
-  async updateOrder(
-    @graphql.Args() args: UpdateOrderArgs
-  ): Promise<Order | null> {
+  async updateMor(@graphql.Args() args: UpdateMorArgs): Promise<Mor | null> {
     try {
       return await this.service.update({
         ...args,
         data: {
           ...args.data,
 
-          user: args.data.user
+          order: args.data.order
             ? {
-                connect: args.data.user,
+                connect: args.data.order,
               }
             : undefined,
         },
@@ -136,15 +130,13 @@ export class OrderResolverBase {
     }
   }
 
-  @graphql.Mutation(() => Order)
+  @graphql.Mutation(() => Mor)
   @nestAccessControl.UseRoles({
-    resource: "Order",
+    resource: "Mor",
     action: "delete",
     possession: "any",
   })
-  async deleteOrder(
-    @graphql.Args() args: DeleteOrderArgs
-  ): Promise<Order | null> {
+  async deleteMor(@graphql.Args() args: DeleteMorArgs): Promise<Mor | null> {
     try {
       return await this.service.delete(args);
     } catch (error) {
@@ -158,39 +150,19 @@ export class OrderResolverBase {
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
-  @graphql.ResolveField(() => [Mor], { name: "mors" })
-  @nestAccessControl.UseRoles({
-    resource: "Mor",
-    action: "read",
-    possession: "any",
-  })
-  async resolveFieldMors(
-    @graphql.Parent() parent: Order,
-    @graphql.Args() args: MorFindManyArgs
-  ): Promise<Mor[]> {
-    const results = await this.service.findMors(parent.id, args);
-
-    if (!results) {
-      return [];
-    }
-
-    return results;
-  }
-
-  @common.UseInterceptors(AclFilterResponseInterceptor)
-  @graphql.ResolveField(() => User, {
+  @graphql.ResolveField(() => Order, {
     nullable: true,
-    name: "user",
+    name: "order",
   })
   @nestAccessControl.UseRoles({
-    resource: "User",
+    resource: "Order",
     action: "read",
     possession: "any",
   })
-  async resolveFieldUser(
-    @graphql.Parent() parent: Order
-  ): Promise<User | null> {
-    const result = await this.service.getUser(parent.id);
+  async resolveFieldOrder(
+    @graphql.Parent() parent: Mor
+  ): Promise<Order | null> {
+    const result = await this.service.getOrder(parent.id);
 
     if (!result) {
       return null;

@@ -14,6 +14,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 import { ValidateNested, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
+import { MorUpdateManyWithoutOrdersInput } from "./MorUpdateManyWithoutOrdersInput";
 
 @InputType()
 class OrderUpdateInput {
@@ -28,6 +29,18 @@ class OrderUpdateInput {
     nullable: true,
   })
   user?: UserWhereUniqueInput | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => MorUpdateManyWithoutOrdersInput,
+  })
+  @ValidateNested()
+  @Type(() => MorUpdateManyWithoutOrdersInput)
+  @IsOptional()
+  @Field(() => MorUpdateManyWithoutOrdersInput, {
+    nullable: true,
+  })
+  mors?: MorUpdateManyWithoutOrdersInput;
 }
 
 export { OrderUpdateInput as OrderUpdateInput };
