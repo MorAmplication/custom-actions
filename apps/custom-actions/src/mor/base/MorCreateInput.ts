@@ -11,36 +11,23 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
+import { OrderWhereUniqueInput } from "../../order/base/OrderWhereUniqueInput";
 import { ValidateNested, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
-import { MorCreateNestedManyWithoutOrdersInput } from "./MorCreateNestedManyWithoutOrdersInput";
 
 @InputType()
-class OrderCreateInput {
+class MorCreateInput {
   @ApiProperty({
     required: false,
-    type: () => UserWhereUniqueInput,
+    type: () => OrderWhereUniqueInput,
   })
   @ValidateNested()
-  @Type(() => UserWhereUniqueInput)
+  @Type(() => OrderWhereUniqueInput)
   @IsOptional()
-  @Field(() => UserWhereUniqueInput, {
+  @Field(() => OrderWhereUniqueInput, {
     nullable: true,
   })
-  user?: UserWhereUniqueInput | null;
-
-  @ApiProperty({
-    required: false,
-    type: () => MorCreateNestedManyWithoutOrdersInput,
-  })
-  @ValidateNested()
-  @Type(() => MorCreateNestedManyWithoutOrdersInput)
-  @IsOptional()
-  @Field(() => MorCreateNestedManyWithoutOrdersInput, {
-    nullable: true,
-  })
-  mors?: MorCreateNestedManyWithoutOrdersInput;
+  order?: OrderWhereUniqueInput | null;
 }
 
-export { OrderCreateInput as OrderCreateInput };
+export { MorCreateInput as MorCreateInput };
