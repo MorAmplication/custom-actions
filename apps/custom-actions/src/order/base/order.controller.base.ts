@@ -47,11 +47,25 @@ export class OrderControllerBase {
   })
   async createOrder(@common.Body() data: OrderCreateInput): Promise<Order> {
     return await this.service.create({
-      data: data,
+      data: {
+        ...data,
+
+        user: data.user
+          ? {
+              connect: data.user,
+            }
+          : undefined,
+      },
       select: {
-        createdAt: true,
         id: true,
+        createdAt: true,
         updatedAt: true,
+
+        user: {
+          select: {
+            id: true,
+          },
+        },
       },
     });
   }
@@ -73,9 +87,15 @@ export class OrderControllerBase {
     return this.service.findMany({
       ...args,
       select: {
-        createdAt: true,
         id: true,
+        createdAt: true,
         updatedAt: true,
+
+        user: {
+          select: {
+            id: true,
+          },
+        },
       },
     });
   }
@@ -98,9 +118,15 @@ export class OrderControllerBase {
     const result = await this.service.findOne({
       where: params,
       select: {
-        createdAt: true,
         id: true,
+        createdAt: true,
         updatedAt: true,
+
+        user: {
+          select: {
+            id: true,
+          },
+        },
       },
     });
     if (result === null) {
@@ -130,11 +156,25 @@ export class OrderControllerBase {
     try {
       return await this.service.update({
         where: params,
-        data: data,
+        data: {
+          ...data,
+
+          user: data.user
+            ? {
+                connect: data.user,
+              }
+            : undefined,
+        },
         select: {
-          createdAt: true,
           id: true,
+          createdAt: true,
           updatedAt: true,
+
+          user: {
+            select: {
+              id: true,
+            },
+          },
         },
       });
     } catch (error) {
@@ -165,9 +205,15 @@ export class OrderControllerBase {
       return await this.service.delete({
         where: params,
         select: {
-          createdAt: true,
           id: true,
+          createdAt: true,
           updatedAt: true,
+
+          user: {
+            select: {
+              id: true,
+            },
+          },
         },
       });
     } catch (error) {

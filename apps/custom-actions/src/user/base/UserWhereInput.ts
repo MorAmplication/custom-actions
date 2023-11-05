@@ -11,24 +11,14 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { StringNullableFilter } from "../../util/StringNullableFilter";
-import { Type } from "class-transformer";
-import { IsOptional } from "class-validator";
 import { StringFilter } from "../../util/StringFilter";
+import { Type } from "class-transformer";
+import { IsOptional, ValidateNested } from "class-validator";
+import { StringNullableFilter } from "../../util/StringNullableFilter";
+import { OrderListRelationFilter } from "../../order/base/OrderListRelationFilter";
 
 @InputType()
 class UserWhereInput {
-  @ApiProperty({
-    required: false,
-    type: StringNullableFilter,
-  })
-  @Type(() => StringNullableFilter)
-  @IsOptional()
-  @Field(() => StringNullableFilter, {
-    nullable: true,
-  })
-  firstName?: StringNullableFilter;
-
   @ApiProperty({
     required: false,
     type: StringFilter,
@@ -39,6 +29,17 @@ class UserWhereInput {
     nullable: true,
   })
   id?: StringFilter;
+
+  @ApiProperty({
+    required: false,
+    type: StringNullableFilter,
+  })
+  @Type(() => StringNullableFilter)
+  @IsOptional()
+  @Field(() => StringNullableFilter, {
+    nullable: true,
+  })
+  firstName?: StringNullableFilter;
 
   @ApiProperty({
     required: false,
@@ -61,6 +62,18 @@ class UserWhereInput {
     nullable: true,
   })
   username?: StringFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => OrderListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => OrderListRelationFilter)
+  @IsOptional()
+  @Field(() => OrderListRelationFilter, {
+    nullable: true,
+  })
+  orders?: OrderListRelationFilter;
 }
 
 export { UserWhereInput as UserWhereInput };
