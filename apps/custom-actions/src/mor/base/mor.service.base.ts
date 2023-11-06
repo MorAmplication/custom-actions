@@ -51,4 +51,12 @@ export class MorServiceBase {
   ): Promise<Mor> {
     return this.prisma.mor.delete(args);
   }
+
+  async getOrder(parentId: string): Promise<Order | null> {
+    return this.prisma.mor
+      .findUnique({
+        where: { id: parentId },
+      })
+      .order();
+  }
 }
