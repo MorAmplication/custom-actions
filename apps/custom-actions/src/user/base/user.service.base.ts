@@ -77,4 +77,15 @@ export class UserServiceBase {
   ): Promise<User> {
     return this.prisma.user.delete(args);
   }
+
+  async findOrders(
+    parentId: string,
+    args: Prisma.OrderFindManyArgs
+  ): Promise<Order[]> {
+    return this.prisma.user
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .orders(args);
+  }
 }
