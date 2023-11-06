@@ -36,11 +36,6 @@ export class MorServiceBase {
   ): Promise<Mor | null> {
     return this.prisma.mor.findUnique(args);
   }
-  async createMor<T extends Prisma.MorCreateArgs>(
-    args: Prisma.SelectSubset<T, Prisma.MorCreateArgs>
-  ): Promise<Mor> {
-    return this.prisma.mor.create<T>(args);
-  }
   async updateMor<T extends Prisma.MorUpdateArgs>(
     args: Prisma.SelectSubset<T, Prisma.MorUpdateArgs>
   ): Promise<Mor> {
@@ -51,7 +46,6 @@ export class MorServiceBase {
   ): Promise<Mor> {
     return this.prisma.mor.delete(args);
   }
-
   async getOrder(parentId: string): Promise<Order | null> {
     return this.prisma.mor
       .findUnique({

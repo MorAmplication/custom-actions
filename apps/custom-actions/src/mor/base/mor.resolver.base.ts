@@ -23,7 +23,6 @@ import { Mor } from "./Mor";
 import { MorCountArgs } from "./MorCountArgs";
 import { MorFindManyArgs } from "./MorFindManyArgs";
 import { MorFindUniqueArgs } from "./MorFindUniqueArgs";
-import { CreateMorArgs } from "./CreateMorArgs";
 import { UpdateMorArgs } from "./UpdateMorArgs";
 import { DeleteMorArgs } from "./DeleteMorArgs";
 import { Order } from "../../order/base/Order";
@@ -75,28 +74,6 @@ export class MorResolverBase {
       return null;
     }
     return result;
-  }
-
-  @common.UseInterceptors(AclValidateRequestInterceptor)
-  @graphql.Mutation(() => Mor)
-  @nestAccessControl.UseRoles({
-    resource: "Mor",
-    action: "create",
-    possession: "any",
-  })
-  async createMor(@graphql.Args() args: CreateMorArgs): Promise<Mor> {
-    return await this.service.create({
-      ...args,
-      data: {
-        ...args.data,
-
-        order: args.data.order
-          ? {
-              connect: args.data.order,
-            }
-          : undefined,
-      },
-    });
   }
 
   @common.UseInterceptors(AclValidateRequestInterceptor)

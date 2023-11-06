@@ -19,11 +19,10 @@ import { ApiNestedQuery } from "../../decorators/api-nested-query.decorator";
 import * as nestAccessControl from "nest-access-control";
 import * as defaultAuthGuard from "../../auth/defaultAuth.guard";
 import { MorService } from "../mor.service";
-import { AclValidateRequestInterceptor } from "../../interceptors/aclValidateRequest.interceptor";
 import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterResponse.interceptor";
-import { MorCreateInput } from "./MorCreateInput";
-import { Mor } from "./Mor";
+import { AclValidateRequestInterceptor } from "../../interceptors/aclValidateRequest.interceptor";
 import { MorFindManyArgs } from "./MorFindManyArgs";
+import { Mor } from "./Mor";
 import { MorWhereUniqueInput } from "./MorWhereUniqueInput";
 import { MorUpdateInput } from "./MorUpdateInput";
 
@@ -34,41 +33,6 @@ export class MorControllerBase {
     protected readonly service: MorService,
     protected readonly rolesBuilder: nestAccessControl.RolesBuilder
   ) {}
-  @common.UseInterceptors(AclValidateRequestInterceptor)
-  @common.Post()
-  @swagger.ApiCreatedResponse({ type: Mor })
-  @nestAccessControl.UseRoles({
-    resource: "Mor",
-    action: "create",
-    possession: "any",
-  })
-  @swagger.ApiForbiddenResponse({
-    type: errors.ForbiddenException,
-  })
-  async createMor(@common.Body() data: MorCreateInput): Promise<Mor> {
-    return await this.service.create({
-      data: {
-        ...data,
-
-        order: data.order
-          ? {
-              connect: data.order,
-            }
-          : undefined,
-      },
-      select: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
-
-        order: {
-          select: {
-            id: true,
-          },
-        },
-      },
-    });
-  }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
   @common.Get()
