@@ -27,11 +27,6 @@ export class OrderServiceBase {
     return this.prisma.order.count(args);
   }
 
-  async Orders<T extends Prisma.OrderFindManyArgs>(
-    args: Prisma.SelectSubset<T, Prisma.OrderFindManyArgs>
-  ): Promise<Order[]> {
-    return this.prisma.order.findMany(args);
-  }
   async Order<T extends Prisma.OrderFindUniqueArgs>(
     args: Prisma.SelectSubset<T, Prisma.OrderFindUniqueArgs>
   ): Promise<Order | null> {
@@ -52,7 +47,6 @@ export class OrderServiceBase {
   ): Promise<Order> {
     return this.prisma.order.delete(args);
   }
-
   async getUser(parentId: string): Promise<User | null> {
     return this.prisma.order
       .findUnique({

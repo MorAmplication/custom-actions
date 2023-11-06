@@ -23,11 +23,8 @@ import { AclValidateRequestInterceptor } from "../../interceptors/aclValidateReq
 import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterResponse.interceptor";
 import { OrderCreateInput } from "./OrderCreateInput";
 import { Order } from "./Order";
-import { OrderFindManyArgs } from "./OrderFindManyArgs";
 import { OrderWhereUniqueInput } from "./OrderWhereUniqueInput";
 import { OrderUpdateInput } from "./OrderUpdateInput";
-import { MorFindManyArgs } from "../../mor/base/MorFindManyArgs";
-import { Mor } from "../../mor/base/Mor";
 import { MorWhereUniqueInput } from "../../mor/base/MorWhereUniqueInput";
 
 @swagger.ApiBearerAuth()
@@ -59,36 +56,6 @@ export class OrderControllerBase {
             }
           : undefined,
       },
-      select: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
-
-        user: {
-          select: {
-            id: true,
-          },
-        },
-      },
-    });
-  }
-
-  @common.UseInterceptors(AclFilterResponseInterceptor)
-  @common.Get()
-  @swagger.ApiOkResponse({ type: [Order] })
-  @ApiNestedQuery(OrderFindManyArgs)
-  @nestAccessControl.UseRoles({
-    resource: "Order",
-    action: "read",
-    possession: "any",
-  })
-  @swagger.ApiForbiddenResponse({
-    type: errors.ForbiddenException,
-  })
-  async Orders(@common.Req() request: Request): Promise<Order[]> {
-    const args = plainToClass(OrderFindManyArgs, request.query);
-    return this.service.findMany({
-      ...args,
       select: {
         id: true,
         createdAt: true,
@@ -227,41 +194,6 @@ export class OrderControllerBase {
       }
       throw error;
     }
-  }
-
-  @common.UseInterceptors(AclFilterResponseInterceptor)
-  @common.Get("/:id/mors")
-  @ApiNestedQuery(MorFindManyArgs)
-  @nestAccessControl.UseRoles({
-    resource: "Mor",
-    action: "read",
-    possession: "any",
-  })
-  async findManyMors(
-    @common.Req() request: Request,
-    @common.Param() params: OrderWhereUniqueInput
-  ): Promise<Mor[]> {
-    const query = plainToClass(MorFindManyArgs, request.query);
-    const results = await this.service.findMors(params.id, {
-      ...query,
-      select: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
-
-        order: {
-          select: {
-            id: true,
-          },
-        },
-      },
-    });
-    if (results === null) {
-      throw new errors.NotFoundException(
-        `No resource was found for ${JSON.stringify(params)}`
-      );
-    }
-    return results;
   }
 
   @common.Patch("/:id/mors")

@@ -211,7 +211,7 @@ export class UserControllerBase {
     action: "read",
     possession: "any",
   })
-  async findManyOrders(
+  async findOrders(
     @common.Req() request: Request,
     @common.Param() params: UserWhereUniqueInput
   ): Promise<Order[]> {
