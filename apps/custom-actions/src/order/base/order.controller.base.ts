@@ -26,8 +26,6 @@ import { Order } from "./Order";
 import { OrderFindManyArgs } from "./OrderFindManyArgs";
 import { OrderWhereUniqueInput } from "./OrderWhereUniqueInput";
 import { OrderUpdateInput } from "./OrderUpdateInput";
-import { MorFindManyArgs } from "../../mor/base/MorFindManyArgs";
-import { Mor } from "../../mor/base/Mor";
 import { MorWhereUniqueInput } from "../../mor/base/MorWhereUniqueInput";
 
 @swagger.ApiBearerAuth()
@@ -101,43 +99,6 @@ export class OrderControllerBase {
         },
       },
     });
-  }
-
-  @common.UseInterceptors(AclFilterResponseInterceptor)
-  @common.Get("/:id")
-  @swagger.ApiOkResponse({ type: Order })
-  @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
-  @nestAccessControl.UseRoles({
-    resource: "Order",
-    action: "read",
-    possession: "own",
-  })
-  @swagger.ApiForbiddenResponse({
-    type: errors.ForbiddenException,
-  })
-  async Order(
-    @common.Param() params: OrderWhereUniqueInput
-  ): Promise<Order | null> {
-    const result = await this.service.findOne({
-      where: params,
-      select: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
-
-        user: {
-          select: {
-            id: true,
-          },
-        },
-      },
-    });
-    if (result === null) {
-      throw new errors.NotFoundException(
-        `No resource was found for ${JSON.stringify(params)}`
-      );
-    }
-    return result;
   }
 
   @common.UseInterceptors(AclValidateRequestInterceptor)
@@ -227,41 +188,6 @@ export class OrderControllerBase {
       }
       throw error;
     }
-  }
-
-  @common.UseInterceptors(AclFilterResponseInterceptor)
-  @common.Get("/:id/mors")
-  @ApiNestedQuery(MorFindManyArgs)
-  @nestAccessControl.UseRoles({
-    resource: "Mor",
-    action: "read",
-    possession: "any",
-  })
-  async findMors(
-    @common.Req() request: Request,
-    @common.Param() params: OrderWhereUniqueInput
-  ): Promise<Mor[]> {
-    const query = plainToClass(MorFindManyArgs, request.query);
-    const results = await this.service.findMors(params.id, {
-      ...query,
-      select: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
-
-        order: {
-          select: {
-            id: true,
-          },
-        },
-      },
-    });
-    if (results === null) {
-      throw new errors.NotFoundException(
-        `No resource was found for ${JSON.stringify(params)}`
-      );
-    }
-    return results;
   }
 
   @common.Post("/:id/mors")
