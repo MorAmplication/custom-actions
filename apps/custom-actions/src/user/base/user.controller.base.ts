@@ -238,28 +238,6 @@ export class UserControllerBase {
     return results;
   }
 
-  @common.Post("/:id/orders")
-  @nestAccessControl.UseRoles({
-    resource: "User",
-    action: "update",
-    possession: "any",
-  })
-  async connectOrders(
-    @common.Param() params: UserWhereUniqueInput,
-    @common.Body() body: OrderWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      orders: {
-        connect: body,
-      },
-    };
-    await this.service.update({
-      where: params,
-      data,
-      select: { id: true },
-    });
-  }
-
   @common.Patch("/:id/orders")
   @nestAccessControl.UseRoles({
     resource: "User",
