@@ -63,4 +63,12 @@ export class OrderServiceBase {
       })
       .mors(args);
   }
+
+  async getUser(parentId: string): Promise<User | null> {
+    return this.prisma.order
+      .findUnique({
+        where: { id: parentId },
+      })
+      .user();
+  }
 }
