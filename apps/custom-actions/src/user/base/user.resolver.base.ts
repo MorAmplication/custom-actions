@@ -141,7 +141,7 @@ export class UserResolverBase {
     action: "read",
     possession: "any",
   })
-  async resolveFieldOrders(
+  async findOrders(
     @graphql.Parent() parent: User,
     @graphql.Args() args: OrderFindManyArgs
   ): Promise<Order[]> {

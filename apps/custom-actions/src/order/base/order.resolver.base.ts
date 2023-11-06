@@ -21,13 +21,10 @@ import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterRespon
 import { AclValidateRequestInterceptor } from "../../interceptors/aclValidateRequest.interceptor";
 import { Order } from "./Order";
 import { OrderCountArgs } from "./OrderCountArgs";
-import { OrderFindManyArgs } from "./OrderFindManyArgs";
 import { OrderFindUniqueArgs } from "./OrderFindUniqueArgs";
 import { CreateOrderArgs } from "./CreateOrderArgs";
 import { UpdateOrderArgs } from "./UpdateOrderArgs";
 import { DeleteOrderArgs } from "./DeleteOrderArgs";
-import { MorFindManyArgs } from "../../mor/base/MorFindManyArgs";
-import { Mor } from "../../mor/base/Mor";
 import { User } from "../../user/base/User";
 import { OrderService } from "../order.service";
 @common.UseGuards(GqlDefaultAuthGuard, gqlACGuard.GqlACGuard)
@@ -51,17 +48,6 @@ export class OrderResolverBase {
     return {
       count: result,
     };
-  }
-
-  @common.UseInterceptors(AclFilterResponseInterceptor)
-  @graphql.Query(() => [Order])
-  @nestAccessControl.UseRoles({
-    resource: "Order",
-    action: "read",
-    possession: "any",
-  })
-  async Orders(@graphql.Args() args: OrderFindManyArgs): Promise<Order[]> {
-    return this.service.findMany(args);
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
@@ -155,26 +141,6 @@ export class OrderResolverBase {
       }
       throw error;
     }
-  }
-
-  @common.UseInterceptors(AclFilterResponseInterceptor)
-  @graphql.ResolveField(() => [Mor], { name: "mors" })
-  @nestAccessControl.UseRoles({
-    resource: "Mor",
-    action: "read",
-    possession: "any",
-  })
-  async resolveFieldMors(
-    @graphql.Parent() parent: Order,
-    @graphql.Args() args: MorFindManyArgs
-  ): Promise<Mor[]> {
-    const results = await this.service.findMors(parent.id, args);
-
-    if (!results) {
-      return [];
-    }
-
-    return results;
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
