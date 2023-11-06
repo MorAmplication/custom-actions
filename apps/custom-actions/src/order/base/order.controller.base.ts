@@ -307,26 +307,4 @@ export class OrderControllerBase {
       select: { id: true },
     });
   }
-
-  @common.Delete("/:id/mors")
-  @nestAccessControl.UseRoles({
-    resource: "Order",
-    action: "update",
-    possession: "any",
-  })
-  async disconnectMors(
-    @common.Param() params: OrderWhereUniqueInput,
-    @common.Body() body: MorWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      mors: {
-        disconnect: body,
-      },
-    };
-    await this.service.update({
-      where: params,
-      data,
-      select: { id: true },
-    });
-  }
 }
