@@ -159,9 +159,7 @@ export class MorResolverBase {
     action: "read",
     possession: "any",
   })
-  async resolveFieldOrder(
-    @graphql.Parent() parent: Mor
-  ): Promise<Order | null> {
+  async getOrder(@graphql.Parent() parent: Mor): Promise<Order | null> {
     const result = await this.service.getOrder(parent.id);
 
     if (!result) {
