@@ -286,28 +286,6 @@ export class OrderControllerBase {
     });
   }
 
-  @common.Patch("/:id/mors")
-  @nestAccessControl.UseRoles({
-    resource: "Order",
-    action: "update",
-    possession: "any",
-  })
-  async updateMors(
-    @common.Param() params: OrderWhereUniqueInput,
-    @common.Body() body: MorWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      mors: {
-        set: body,
-      },
-    };
-    await this.service.update({
-      where: params,
-      data,
-      select: { id: true },
-    });
-  }
-
   @common.Delete("/:id/mors")
   @nestAccessControl.UseRoles({
     resource: "Order",
