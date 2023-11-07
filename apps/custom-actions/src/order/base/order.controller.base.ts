@@ -101,6 +101,43 @@ export class OrderControllerBase {
     });
   }
 
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @common.Get("/:id")
+  @swagger.ApiOkResponse({ type: Order })
+  @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
+  @nestAccessControl.UseRoles({
+    resource: "Order",
+    action: "read",
+    possession: "own",
+  })
+  @swagger.ApiForbiddenResponse({
+    type: errors.ForbiddenException,
+  })
+  async Order(
+    @common.Param() params: OrderWhereUniqueInput
+  ): Promise<Order | null> {
+    const result = await this.service.findOne({
+      where: params,
+      select: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+
+        user: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+    if (result === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return result;
+  }
+
   @common.UseInterceptors(AclValidateRequestInterceptor)
   @common.Patch("/:id")
   @swagger.ApiOkResponse({ type: Order })
