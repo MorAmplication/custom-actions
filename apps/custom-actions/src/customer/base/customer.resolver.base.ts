@@ -19,13 +19,13 @@ import { GqlDefaultAuthGuard } from "../../auth/gqlDefaultAuth.guard";
 import * as common from "@nestjs/common";
 import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterResponse.interceptor";
 import { AclValidateRequestInterceptor } from "../../interceptors/aclValidateRequest.interceptor";
-import { CreateCustomerArgs } from "./CreateCustomerArgs";
-import { UpdateCustomerArgs } from "./UpdateCustomerArgs";
-import { DeleteCustomerArgs } from "./DeleteCustomerArgs";
+import { Customer } from "./Customer";
 import { CustomerCountArgs } from "./CustomerCountArgs";
 import { CustomerFindManyArgs } from "./CustomerFindManyArgs";
 import { CustomerFindUniqueArgs } from "./CustomerFindUniqueArgs";
-import { Customer } from "./Customer";
+import { CreateCustomerArgs } from "./CreateCustomerArgs";
+import { UpdateCustomerArgs } from "./UpdateCustomerArgs";
+import { DeleteCustomerArgs } from "./DeleteCustomerArgs";
 import { OrderFindManyArgs } from "../../order/base/OrderFindManyArgs";
 import { Order } from "../../order/base/Order";
 import { Address } from "../../address/base/Address";
@@ -44,7 +44,7 @@ export class CustomerResolverBase {
     action: "read",
     possession: "any",
   })
-  async _customersMeta(
+  async _CustomersMeta(
     @graphql.Args() args: CustomerCountArgs
   ): Promise<MetaQueryPayload> {
     const result = await this.service.count(args);
@@ -60,7 +60,7 @@ export class CustomerResolverBase {
     action: "read",
     possession: "any",
   })
-  async customers(
+  async Customers(
     @graphql.Args() args: CustomerFindManyArgs
   ): Promise<Customer[]> {
     return this.service.findMany(args);
@@ -73,7 +73,7 @@ export class CustomerResolverBase {
     action: "read",
     possession: "own",
   })
-  async customer(
+  async Customer(
     @graphql.Args() args: CustomerFindUniqueArgs
   ): Promise<Customer | null> {
     const result = await this.service.findOne(args);
@@ -168,7 +168,7 @@ export class CustomerResolverBase {
     action: "read",
     possession: "any",
   })
-  async resolveFieldOrders(
+  async findOrders(
     @graphql.Parent() parent: Customer,
     @graphql.Args() args: OrderFindManyArgs
   ): Promise<Order[]> {
@@ -191,7 +191,7 @@ export class CustomerResolverBase {
     action: "read",
     possession: "any",
   })
-  async resolveFieldAddress(
+  async getAddress(
     @graphql.Parent() parent: Customer
   ): Promise<Address | null> {
     const result = await this.service.getAddress(parent.id);

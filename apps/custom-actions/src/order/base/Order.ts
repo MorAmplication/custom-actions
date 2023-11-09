@@ -11,10 +11,17 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsDate, ValidateNested, IsOptional } from "class-validator";
+import {
+  IsString,
+  IsDate,
+  IsInt,
+  IsOptional,
+  IsNumber,
+  ValidateNested,
+} from "class-validator";
 import { Type } from "class-transformer";
-import { User } from "../../user/base/User";
-import { Mor } from "../../mor/base/Mor";
+import { Customer } from "../../customer/base/Customer";
+import { Product } from "../../product/base/Product";
 
 @ObjectType()
 class Order {
@@ -44,21 +51,54 @@ class Order {
 
   @ApiProperty({
     required: false,
-    type: () => User,
+    type: Number,
   })
-  @ValidateNested()
-  @Type(() => User)
+  @IsInt()
   @IsOptional()
-  user?: User | null;
+  @Field(() => Number, {
+    nullable: true,
+  })
+  quantity!: number | null;
 
   @ApiProperty({
     required: false,
-    type: () => [Mor],
+    type: Number,
+  })
+  @IsNumber()
+  @IsOptional()
+  @Field(() => Number, {
+    nullable: true,
+  })
+  discount!: number | null;
+
+  @ApiProperty({
+    required: false,
+    type: Number,
+  })
+  @IsInt()
+  @IsOptional()
+  @Field(() => Number, {
+    nullable: true,
+  })
+  totalPrice!: number | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => Customer,
   })
   @ValidateNested()
-  @Type(() => Mor)
+  @Type(() => Customer)
   @IsOptional()
-  mors?: Array<Mor>;
+  customer?: Customer | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => Product,
+  })
+  @ValidateNested()
+  @Type(() => Product)
+  @IsOptional()
+  product?: Product | null;
 }
 
 export { Order as Order };

@@ -259,7 +259,7 @@ export class CustomerControllerBase {
     action: "read",
     possession: "any",
   })
-  async findManyOrders(
+  async findOrders(
     @common.Req() request: Request,
     @common.Param() params: CustomerWhereUniqueInput
   ): Promise<Order[]> {

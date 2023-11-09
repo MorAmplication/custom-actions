@@ -13,8 +13,8 @@ import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import {
   IsString,
-  IsOptional,
   IsDate,
+  IsOptional,
   IsInt,
   ValidateNested,
 } from "class-validator";
@@ -23,17 +23,6 @@ import { Customer } from "../../customer/base/Customer";
 
 @ObjectType()
 class Address {
-  @ApiProperty({
-    required: false,
-    type: String,
-  })
-  @IsString()
-  @IsOptional()
-  @Field(() => String, {
-    nullable: true,
-  })
-  state!: string | null;
-
   @ApiProperty({
     required: true,
     type: String,
@@ -90,6 +79,17 @@ class Address {
     nullable: true,
   })
   city!: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  state!: string | null;
 
   @ApiProperty({
     required: false,
