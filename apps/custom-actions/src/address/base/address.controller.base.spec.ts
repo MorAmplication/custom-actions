@@ -18,45 +18,45 @@ import { AddressService } from "../address.service";
 const nonExistingId = "nonExistingId";
 const existingId = "existingId";
 const CREATE_INPUT = {
-  state: "exampleState",
   id: "exampleId",
   createdAt: new Date(),
   updatedAt: new Date(),
   address_1: "exampleAddress_1",
   address_2: "exampleAddress_2",
   city: "exampleCity",
+  state: "exampleState",
   zip: 42,
 };
 const CREATE_RESULT = {
-  state: "exampleState",
   id: "exampleId",
   createdAt: new Date(),
   updatedAt: new Date(),
   address_1: "exampleAddress_1",
   address_2: "exampleAddress_2",
   city: "exampleCity",
+  state: "exampleState",
   zip: 42,
 };
 const FIND_MANY_RESULT = [
   {
-    state: "exampleState",
     id: "exampleId",
     createdAt: new Date(),
     updatedAt: new Date(),
     address_1: "exampleAddress_1",
     address_2: "exampleAddress_2",
     city: "exampleCity",
+    state: "exampleState",
     zip: 42,
   },
 ];
 const FIND_ONE_RESULT = {
-  state: "exampleState",
   id: "exampleId",
   createdAt: new Date(),
   updatedAt: new Date(),
   address_1: "exampleAddress_1",
   address_2: "exampleAddress_2",
   city: "exampleCity",
+  state: "exampleState",
   zip: 42,
 };
 

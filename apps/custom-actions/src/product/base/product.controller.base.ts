@@ -208,7 +208,7 @@ export class ProductControllerBase {
     action: "read",
     possession: "any",
   })
-  async findManyOrders(
+  async findOrders(
     @common.Req() request: Request,
     @common.Param() params: ProductWhereUniqueInput
   ): Promise<Order[]> {

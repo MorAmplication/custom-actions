@@ -14,8 +14,8 @@ import { PrismaService } from "../../prisma/prisma.service";
 import {
   Prisma,
   Order, // @ts-ignore
-  Mor, // @ts-ignore
-  User,
+  Customer, // @ts-ignore
+  Product,
 } from "@prisma/client";
 
 export class OrderServiceBase {
@@ -53,22 +53,19 @@ export class OrderServiceBase {
     return this.prisma.order.delete(args);
   }
 
-  async findMors(
-    parentId: string,
-    args: Prisma.MorFindManyArgs
-  ): Promise<Mor[]> {
-    return this.prisma.order
-      .findUniqueOrThrow({
-        where: { id: parentId },
-      })
-      .mors(args);
-  }
-
-  async getUser(parentId: string): Promise<User | null> {
+  async getCustomer(parentId: string): Promise<Customer | null> {
     return this.prisma.order
       .findUnique({
         where: { id: parentId },
       })
-      .user();
+      .customer();
+  }
+
+  async getProduct(parentId: string): Promise<Product | null> {
+    return this.prisma.order
+      .findUnique({
+        where: { id: parentId },
+      })
+      .product();
   }
 }
