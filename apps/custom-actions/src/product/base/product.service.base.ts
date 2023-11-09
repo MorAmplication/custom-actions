@@ -25,41 +25,4 @@ export class ProductServiceBase {
   ): Promise<number> {
     return this.prisma.product.count(args);
   }
-
-  async Products<T extends Prisma.ProductFindManyArgs>(
-    args: Prisma.SelectSubset<T, Prisma.ProductFindManyArgs>
-  ): Promise<Product[]> {
-    return this.prisma.product.findMany(args);
-  }
-  async Product<T extends Prisma.ProductFindUniqueArgs>(
-    args: Prisma.SelectSubset<T, Prisma.ProductFindUniqueArgs>
-  ): Promise<Product | null> {
-    return this.prisma.product.findUnique(args);
-  }
-  async createProduct<T extends Prisma.ProductCreateArgs>(
-    args: Prisma.SelectSubset<T, Prisma.ProductCreateArgs>
-  ): Promise<Product> {
-    return this.prisma.product.create<T>(args);
-  }
-  async updateProduct<T extends Prisma.ProductUpdateArgs>(
-    args: Prisma.SelectSubset<T, Prisma.ProductUpdateArgs>
-  ): Promise<Product> {
-    return this.prisma.product.update<T>(args);
-  }
-  async deleteProduct<T extends Prisma.ProductDeleteArgs>(
-    args: Prisma.SelectSubset<T, Prisma.ProductDeleteArgs>
-  ): Promise<Product> {
-    return this.prisma.product.delete(args);
-  }
-
-  async findOrders(
-    parentId: string,
-    args: Prisma.OrderFindManyArgs
-  ): Promise<Order[]> {
-    return this.prisma.product
-      .findUniqueOrThrow({
-        where: { id: parentId },
-      })
-      .orders(args);
-  }
 }
