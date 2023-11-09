@@ -26,9 +26,6 @@ import { Order } from "./Order";
 import { OrderFindManyArgs } from "./OrderFindManyArgs";
 import { OrderWhereUniqueInput } from "./OrderWhereUniqueInput";
 import { OrderUpdateInput } from "./OrderUpdateInput";
-import { MorFindManyArgs } from "../../mor/base/MorFindManyArgs";
-import { Mor } from "../../mor/base/Mor";
-import { MorWhereUniqueInput } from "../../mor/base/MorWhereUniqueInput";
 
 @swagger.ApiBearerAuth()
 @common.UseGuards(defaultAuthGuard.DefaultAuthGuard, nestAccessControl.ACGuard)
@@ -53,9 +50,15 @@ export class OrderControllerBase {
       data: {
         ...data,
 
-        user: data.user
+        customer: data.customer
           ? {
-              connect: data.user,
+              connect: data.customer,
+            }
+          : undefined,
+
+        product: data.product
+          ? {
+              connect: data.product,
             }
           : undefined,
       },
@@ -63,8 +66,17 @@ export class OrderControllerBase {
         id: true,
         createdAt: true,
         updatedAt: true,
+        quantity: true,
+        discount: true,
+        totalPrice: true,
 
-        user: {
+        customer: {
+          select: {
+            id: true,
+          },
+        },
+
+        product: {
           select: {
             id: true,
           },
@@ -93,8 +105,17 @@ export class OrderControllerBase {
         id: true,
         createdAt: true,
         updatedAt: true,
+        quantity: true,
+        discount: true,
+        totalPrice: true,
 
-        user: {
+        customer: {
+          select: {
+            id: true,
+          },
+        },
+
+        product: {
           select: {
             id: true,
           },
@@ -104,7 +125,7 @@ export class OrderControllerBase {
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
-  @common.Get("/:id/test")
+  @common.Get("/:id")
   @swagger.ApiOkResponse({ type: Order })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
   @nestAccessControl.UseRoles({
@@ -124,8 +145,17 @@ export class OrderControllerBase {
         id: true,
         createdAt: true,
         updatedAt: true,
+        quantity: true,
+        discount: true,
+        totalPrice: true,
 
-        user: {
+        customer: {
+          select: {
+            id: true,
+          },
+        },
+
+        product: {
           select: {
             id: true,
           },
@@ -162,9 +192,15 @@ export class OrderControllerBase {
         data: {
           ...data,
 
-          user: data.user
+          customer: data.customer
             ? {
-                connect: data.user,
+                connect: data.customer,
+              }
+            : undefined,
+
+          product: data.product
+            ? {
+                connect: data.product,
               }
             : undefined,
         },
@@ -172,8 +208,17 @@ export class OrderControllerBase {
           id: true,
           createdAt: true,
           updatedAt: true,
+          quantity: true,
+          discount: true,
+          totalPrice: true,
 
-          user: {
+          customer: {
+            select: {
+              id: true,
+            },
+          },
+
+          product: {
             select: {
               id: true,
             },
@@ -211,8 +256,17 @@ export class OrderControllerBase {
           id: true,
           createdAt: true,
           updatedAt: true,
+          quantity: true,
+          discount: true,
+          totalPrice: true,
 
-          user: {
+          customer: {
+            select: {
+              id: true,
+            },
+          },
+
+          product: {
             select: {
               id: true,
             },
@@ -227,106 +281,5 @@ export class OrderControllerBase {
       }
       throw error;
     }
-  }
-
-  @common.UseInterceptors(AclFilterResponseInterceptor)
-  @common.Get("/:id/mors")
-  @ApiNestedQuery(MorFindManyArgs)
-  @nestAccessControl.UseRoles({
-    resource: "Mor",
-    action: "read",
-    possession: "any",
-  })
-  async findMors(
-    @common.Req() request: Request,
-    @common.Param() params: OrderWhereUniqueInput
-  ): Promise<Mor[]> {
-    const query = plainToClass(MorFindManyArgs, request.query);
-    const results = await this.service.findMors(params.id, {
-      ...query,
-      select: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
-
-        order: {
-          select: {
-            id: true,
-          },
-        },
-      },
-    });
-    if (results === null) {
-      throw new errors.NotFoundException(
-        `No resource was found for ${JSON.stringify(params)}`
-      );
-    }
-    return results;
-  }
-
-  @common.Post("/:id/mors")
-  @nestAccessControl.UseRoles({
-    resource: "Order",
-    action: "update",
-    possession: "any",
-  })
-  async connectMors(
-    @common.Param() params: OrderWhereUniqueInput,
-    @common.Body() body: MorWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      mors: {
-        connect: body,
-      },
-    };
-    await this.service.update({
-      where: params,
-      data,
-      select: { id: true },
-    });
-  }
-
-  @common.Patch("/:id/mors")
-  @nestAccessControl.UseRoles({
-    resource: "Order",
-    action: "update",
-    possession: "any",
-  })
-  async updateMors(
-    @common.Param() params: OrderWhereUniqueInput,
-    @common.Body() body: MorWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      mors: {
-        set: body,
-      },
-    };
-    await this.service.update({
-      where: params,
-      data,
-      select: { id: true },
-    });
-  }
-
-  @common.Delete("/:id/mors")
-  @nestAccessControl.UseRoles({
-    resource: "Order",
-    action: "update",
-    possession: "any",
-  })
-  async disconnectMors(
-    @common.Param() params: OrderWhereUniqueInput,
-    @common.Body() body: MorWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      mors: {
-        disconnect: body,
-      },
-    };
-    await this.service.update({
-      where: params,
-      data,
-      select: { id: true },
-    });
   }
 }
