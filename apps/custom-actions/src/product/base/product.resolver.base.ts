@@ -17,7 +17,10 @@ import * as nestAccessControl from "nest-access-control";
 import * as gqlACGuard from "../../auth/gqlAC.guard";
 import { GqlDefaultAuthGuard } from "../../auth/gqlDefaultAuth.guard";
 import * as common from "@nestjs/common";
+import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterResponse.interceptor";
 import { Product } from "./Product";
+import { OrderFindManyArgs } from "../../order/base/OrderFindManyArgs";
+import { Order } from "../../order/base/Order";
 import { ProductService } from "../product.service";
 @common.UseGuards(GqlDefaultAuthGuard, gqlACGuard.GqlACGuard)
 @graphql.Resolver(() => Product)
@@ -26,4 +29,24 @@ export class ProductResolverBase {
     protected readonly service: ProductService,
     protected readonly rolesBuilder: nestAccessControl.RolesBuilder
   ) {}
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => [Order], { name: "orders" })
+  @nestAccessControl.UseRoles({
+    resource: "Order",
+    action: "read",
+    possession: "any",
+  })
+  async findOrders(
+    @graphql.Parent() parent: Product,
+    @graphql.Args() args: OrderFindManyArgs
+  ): Promise<Order[]> {
+    const results = await this.service.findOrders(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
+  }
 }

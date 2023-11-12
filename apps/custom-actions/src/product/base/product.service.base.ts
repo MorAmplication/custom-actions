@@ -25,4 +25,15 @@ export class ProductServiceBase {
   ): Promise<number> {
     return this.prisma.product.count(args);
   }
+
+  async findOrders(
+    parentId: string,
+    args: Prisma.OrderFindManyArgs
+  ): Promise<Order[]> {
+    return this.prisma.product
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .orders(args);
+  }
 }
