@@ -28,6 +28,7 @@ import { UpdateCustomerArgs } from "./UpdateCustomerArgs";
 import { DeleteCustomerArgs } from "./DeleteCustomerArgs";
 import { OrderFindManyArgs } from "../../order/base/OrderFindManyArgs";
 import { Order } from "../../order/base/Order";
+import { Address } from "../../address/base/Address";
 import { CustomerService } from "../customer.service";
 @common.UseGuards(GqlDefaultAuthGuard, gqlACGuard.GqlACGuard)
 @graphql.Resolver(() => Customer)
@@ -178,5 +179,26 @@ export class CustomerResolverBase {
     }
 
     return results;
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => Address, {
+    nullable: true,
+    name: "address",
+  })
+  @nestAccessControl.UseRoles({
+    resource: "Address",
+    action: "read",
+    possession: "any",
+  })
+  async getAddress(
+    @graphql.Parent() parent: Customer
+  ): Promise<Address | null> {
+    const result = await this.service.getAddress(parent.id);
+
+    if (!result) {
+      return null;
+    }
+    return result;
   }
 }
