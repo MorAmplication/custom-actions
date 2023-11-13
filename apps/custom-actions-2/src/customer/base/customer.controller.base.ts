@@ -26,8 +26,6 @@ import { Customer } from "./Customer";
 import { CustomerFindManyArgs } from "./CustomerFindManyArgs";
 import { CustomerWhereUniqueInput } from "./CustomerWhereUniqueInput";
 import { CustomerUpdateInput } from "./CustomerUpdateInput";
-import { OrderFindManyArgs } from "../../order/base/OrderFindManyArgs";
-import { Order } from "../../order/base/Order";
 import { OrderWhereUniqueInput } from "../../order/base/OrderWhereUniqueInput";
 
 @swagger.ApiBearerAuth()
@@ -251,50 +249,6 @@ export class CustomerControllerBase {
     }
   }
 
-  @common.UseInterceptors(AclFilterResponseInterceptor)
-  @common.Get("/:id/orders")
-  @ApiNestedQuery(OrderFindManyArgs)
-  @nestAccessControl.UseRoles({
-    resource: "Order",
-    action: "read",
-    possession: "any",
-  })
-  async findOrders(
-    @common.Req() request: Request,
-    @common.Param() params: CustomerWhereUniqueInput
-  ): Promise<Order[]> {
-    const query = plainToClass(OrderFindManyArgs, request.query);
-    const results = await this.service.findOrders(params.id, {
-      ...query,
-      select: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
-        quantity: true,
-        discount: true,
-        totalPrice: true,
-
-        customer: {
-          select: {
-            id: true,
-          },
-        },
-
-        product: {
-          select: {
-            id: true,
-          },
-        },
-      },
-    });
-    if (results === null) {
-      throw new errors.NotFoundException(
-        `No resource was found for ${JSON.stringify(params)}`
-      );
-    }
-    return results;
-  }
-
   @common.Post("/:id/orders")
   @nestAccessControl.UseRoles({
     resource: "Customer",
@@ -330,28 +284,6 @@ export class CustomerControllerBase {
     const data = {
       orders: {
         set: body,
-      },
-    };
-    await this.service.update({
-      where: params,
-      data,
-      select: { id: true },
-    });
-  }
-
-  @common.Delete("/:id/orders")
-  @nestAccessControl.UseRoles({
-    resource: "Customer",
-    action: "update",
-    possession: "any",
-  })
-  async disconnectOrders(
-    @common.Param() params: CustomerWhereUniqueInput,
-    @common.Body() body: OrderWhereUniqueInput[]
-  ): Promise<void> {
-    const data = {
-      orders: {
-        disconnect: body,
       },
     };
     await this.service.update({
