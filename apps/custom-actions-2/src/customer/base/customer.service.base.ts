@@ -63,4 +63,12 @@ export class CustomerServiceBase {
       })
       .orders(args);
   }
+
+  async getAddress(parentId: string): Promise<Address | null> {
+    return this.prisma.customer
+      .findUnique({
+        where: { id: parentId },
+      })
+      .address();
+  }
 }
